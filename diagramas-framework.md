@@ -212,40 +212,7 @@ flowchart LR
 
 ---
 
-## 6. Estructura del Prompt — Contexto Mínimo
-
-```mermaid
-flowchart TB
-    subgraph PROMPT["Prompt Estructurado"]
-        ROL["Rol: Dev Senior"]
-        INV["Invocación: Spec X vY.Z"]
-        TAREA["Tarea: Una sola tarea técnica"]
-        REGLAS["Reglas: No inventar,<br>no PII real, masking"]
-    end
-
-    subgraph CTX["Contexto Mínimo (NO todo el repo)"]
-        CG["Contexto Gobernanza<br>- Principios arquitectura<br>- ADRs relevantes<br>- Estándares"]
-        CE["Contexto Ejecutable<br>- Contrato API<br>- Escenarios de prueba<br>- Spec versionado"]
-        CD["Contexto DLP<br>- Clasificación datos (L1)<br>- Tratamiento PII (L2)"]
-    end
-
-    subgraph OUT["Salida Esperada"]
-        DIFF["Diff pequeño<br>y revisable"]
-        TESTS["Tests incluidos<br>basados en spec"]
-        MASK["Masking PII<br>aplicado"]
-        TRACE["Trazable:<br>spec → código → commit"]
-    end
-
-    PROMPT --> CTX --> OUT
-
-    style PROMPT fill:#3498db,color:#fff
-    style CTX fill:#f39c12,color:#fff
-    style OUT fill:#27ae60,color:#fff
-```
-
----
-
-## 7. Cadena de Trazabilidad Completa
+## 6. Cadena de Trazabilidad Completa
 
 ```mermaid
 flowchart LR
@@ -279,7 +246,7 @@ flowchart LR
 
 ---
 
-## 8. Catálogo de Skills y su Ubicación en Fases
+## 7. Catálogo de Skills y su Ubicación en Fases
 
 ```mermaid
 flowchart TB
@@ -319,7 +286,7 @@ flowchart TB
 
 ---
 
-## 9. Niveles de Madurez de Adopción
+## 8. Niveles de Madurez de Adopción
 
 ```mermaid
 flowchart BT
@@ -340,7 +307,7 @@ flowchart BT
 
 ---
 
-## 10. Flujo DLP (Protección de Datos) End-to-End
+## 9. Flujo DLP (Protección de Datos) End-to-End
 
 ```mermaid
 flowchart TB
@@ -393,7 +360,7 @@ flowchart TB
 
 ---
 
-## 11. Modelo de Costos — Modelo por Tipo de Tarea
+## 10. Modelo de Costos — Modelo por Tipo de Tarea
 
 ```mermaid
 flowchart LR
@@ -421,7 +388,7 @@ flowchart LR
 
 ---
 
-## 12. Plan de Adopción 30-60-90 Días
+## 11. Plan de Adopción 30-60-90 Días
 
 ```mermaid
 %%{init: {'theme': 'base', 'themeVariables': {'fontSize': '14px', 'primaryColor': '#4a90d9', 'primaryTextColor': '#000000', 'primaryBorderColor': '#3a7abd', 'secondaryColor': '#27ae60', 'tertiaryColor': '#7b68ee', 'textColor': '#000000', 'mainBkg': '#ffffff', 'sectionBkgColor': '#e8f4fd', 'sectionBkgColor2': '#f5f0ff', 'altSectionBkgColor': '#e8f5e9', 'taskBkgColor': '#4a90d9', 'taskTextColor': '#ffffff', 'taskBorderColor': '#3a7abd', 'taskTextOutsideColor': '#000000', 'taskTextClickableColor': '#000000', 'activeTaskBkgColor': '#27ae60', 'activeTaskBorderColor': '#1e8449', 'doneTaskBkgColor': '#7b68ee', 'doneTaskBorderColor': '#6a5acd', 'gridColor': '#cccccc', 'todayLineColor': '#e74c3c', 'titleColor': '#000000', 'labelColor': '#000000', 'loopTextColor': '#000000', 'noteBkgColor': '#ffffff', 'noteTextColor': '#000000'}}}%%
@@ -449,7 +416,7 @@ gantt
 
 ---
 
-## 13. Ejemplo Completo: Sistema de Booking
+## 12. Ejemplo Completo: Sistema de Booking
 
 ```mermaid
 flowchart TB
@@ -489,7 +456,7 @@ flowchart TB
 
 ---
 
-## 14. Anti-patrones vs. Patrones Correctos
+## 13. Anti-patrones vs. Patrones Correctos
 
 ```mermaid
 flowchart LR
@@ -533,7 +500,7 @@ flowchart LR
 
 ---
 
-## 15. Alineacion DDD en Especificaciones
+## 14. Alineacion DDD en Especificaciones
 
 ```mermaid
 flowchart TB
