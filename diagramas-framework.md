@@ -212,31 +212,7 @@ flowchart LR
 
 ---
 
-## 6. Ciclo de Iteración TDD con IA
-
-```mermaid
-flowchart LR
-    T["1. Tests GWT<br>(Given-When-Then)<br>basados en spec"]
-    I["2. Implementación<br>mínima<br>generada por IA"]
-    R["3. Refactor<br>asistido<br>por IA"]
-    RC["4. Revisión<br>por capas<br>(humana)"]
-    QG["5. Quality<br>Gates<br>(automatizado)"]
-
-    T --> I --> R --> RC --> QG
-    QG -->|"Iteración corta"| T
-
-    style T fill:#3498db,color:#fff
-    style I fill:#e67e22,color:#fff
-    style R fill:#9b59b6,color:#fff
-    style RC fill:#27ae60,color:#fff
-    style QG fill:#e74c3c,color:#fff
-```
-
-**Reglas:** PRs < 400 líneas | Preferir 10 PRs de 20 líneas sobre 1 PR de 200 | Ciclos cortos con evidencia rápida
-
----
-
-## 7. Estructura del Prompt — Contexto Mínimo
+## 6. Estructura del Prompt — Contexto Mínimo
 
 ```mermaid
 flowchart TB
@@ -269,7 +245,7 @@ flowchart TB
 
 ---
 
-## 8. Cadena de Trazabilidad Completa
+## 7. Cadena de Trazabilidad Completa
 
 ```mermaid
 flowchart LR
@@ -303,7 +279,7 @@ flowchart LR
 
 ---
 
-## 9. Catálogo de Skills y su Ubicación en Fases
+## 8. Catálogo de Skills y su Ubicación en Fases
 
 ```mermaid
 flowchart TB
@@ -343,7 +319,7 @@ flowchart TB
 
 ---
 
-## 10. Niveles de Madurez de Adopción
+## 9. Niveles de Madurez de Adopción
 
 ```mermaid
 flowchart BT
@@ -364,7 +340,7 @@ flowchart BT
 
 ---
 
-## 11. Flujo DLP (Protección de Datos) End-to-End
+## 10. Flujo DLP (Protección de Datos) End-to-End
 
 ```mermaid
 flowchart TB
@@ -417,7 +393,7 @@ flowchart TB
 
 ---
 
-## 12. Modelo de Costos — Modelo por Tipo de Tarea
+## 11. Modelo de Costos — Modelo por Tipo de Tarea
 
 ```mermaid
 flowchart LR
@@ -445,7 +421,7 @@ flowchart LR
 
 ---
 
-## 13. Plan de Adopción 30-60-90 Días
+## 12. Plan de Adopción 30-60-90 Días
 
 ```mermaid
 %%{init: {'theme': 'base', 'themeVariables': {'fontSize': '14px', 'primaryColor': '#4a90d9', 'primaryTextColor': '#000000', 'primaryBorderColor': '#3a7abd', 'secondaryColor': '#27ae60', 'tertiaryColor': '#7b68ee', 'textColor': '#000000', 'mainBkg': '#ffffff', 'sectionBkgColor': '#e8f4fd', 'sectionBkgColor2': '#f5f0ff', 'altSectionBkgColor': '#e8f5e9', 'taskBkgColor': '#4a90d9', 'taskTextColor': '#ffffff', 'taskBorderColor': '#3a7abd', 'taskTextOutsideColor': '#000000', 'taskTextClickableColor': '#000000', 'activeTaskBkgColor': '#27ae60', 'activeTaskBorderColor': '#1e8449', 'doneTaskBkgColor': '#7b68ee', 'doneTaskBorderColor': '#6a5acd', 'gridColor': '#cccccc', 'todayLineColor': '#e74c3c', 'titleColor': '#000000', 'labelColor': '#000000', 'loopTextColor': '#000000', 'noteBkgColor': '#ffffff', 'noteTextColor': '#000000'}}}%%
@@ -473,7 +449,7 @@ gantt
 
 ---
 
-## 14. Ejemplo Completo: Sistema de Booking
+## 13. Ejemplo Completo: Sistema de Booking
 
 ```mermaid
 flowchart TB
@@ -513,7 +489,7 @@ flowchart TB
 
 ---
 
-## 15. Anti-patrones vs. Patrones Correctos
+## 14. Anti-patrones vs. Patrones Correctos
 
 ```mermaid
 flowchart LR
@@ -557,7 +533,7 @@ flowchart LR
 
 ---
 
-## 16. Alineacion DDD en Especificaciones
+## 15. Alineacion DDD en Especificaciones
 
 ```mermaid
 flowchart TB
