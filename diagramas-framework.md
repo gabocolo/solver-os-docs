@@ -123,55 +123,7 @@ flowchart TB
 
 ---
 
-## 4. Matriz RACI por Fase
-
-```mermaid
-block-beta
-    columns 4
-    
-    block:header:4
-        H1["Actividad"] H2["Arquitecto"] H3["Dev Senior"] H4["QA/Revisor"]
-    end
-
-    block:row1:4
-        R1["Definir ADRs"] R1a["R/A"] R1b["C"] R1c["I"]
-    end
-
-    block:row2:4
-        R2["Crear Specs"] R2a["A"] R2b["R"] R2c["C"]
-    end
-
-    block:row3:4
-        R3["Aprobar Specs"] R3a["R/A"] R3b["I"] R3c["C"]
-    end
-
-    block:row4:4
-        R4["Diseñar Prompt"] R4a["C"] R4b["R/A"] R4c["I"]
-    end
-
-    block:row5:4
-        R5["Generar Código"] R5a["I"] R5b["R/A"] R5c["I"]
-    end
-
-    block:row6:4
-        R6["Validar Gates"] R6a["I"] R6b["C"] R6c["R/A"]
-    end
-
-    block:row7:4
-        R7["Revisión y Merge"] R7a["C"] R7b["I"] R7c["R/A"]
-    end
-
-    style H1 fill:#34495e,color:#fff
-    style H2 fill:#4a90d9,color:#fff
-    style H3 fill:#e67e22,color:#fff
-    style H4 fill:#27ae60,color:#fff
-```
-
-> **R** = Responsable (ejecuta) | **A** = Accountable (responde) | **C** = Consultado | **I** = Informado
-
----
-
-## 5. Niveles de Especificación y su Relación
+## 4. Niveles de Especificación y su Relación
 
 ```mermaid
 flowchart TB
@@ -218,7 +170,7 @@ flowchart TB
 
 ---
 
-## 6. Quality Gates — Flujo de Control
+## 5. Quality Gates — Flujo de Control
 
 ```mermaid
 flowchart LR
@@ -260,7 +212,7 @@ flowchart LR
 
 ---
 
-## 7. Ciclo de Iteración TDD con IA
+## 6. Ciclo de Iteración TDD con IA
 
 ```mermaid
 flowchart LR
@@ -284,7 +236,7 @@ flowchart LR
 
 ---
 
-## 8. Estructura del Prompt — Contexto Mínimo
+## 7. Estructura del Prompt — Contexto Mínimo
 
 ```mermaid
 flowchart TB
@@ -317,7 +269,7 @@ flowchart TB
 
 ---
 
-## 9. Cadena de Trazabilidad Completa
+## 8. Cadena de Trazabilidad Completa
 
 ```mermaid
 flowchart LR
@@ -351,7 +303,7 @@ flowchart LR
 
 ---
 
-## 10. Catálogo de Skills y su Ubicación en Fases
+## 9. Catálogo de Skills y su Ubicación en Fases
 
 ```mermaid
 flowchart TB
@@ -391,7 +343,7 @@ flowchart TB
 
 ---
 
-## 11. Niveles de Madurez de Adopción
+## 10. Niveles de Madurez de Adopción
 
 ```mermaid
 flowchart BT
@@ -412,7 +364,7 @@ flowchart BT
 
 ---
 
-## 12. Flujo DLP (Protección de Datos) End-to-End
+## 11. Flujo DLP (Protección de Datos) End-to-End
 
 ```mermaid
 flowchart TB
@@ -465,7 +417,7 @@ flowchart TB
 
 ---
 
-## 13. Modelo de Costos — Modelo por Tipo de Tarea
+## 12. Modelo de Costos — Modelo por Tipo de Tarea
 
 ```mermaid
 flowchart LR
@@ -493,7 +445,7 @@ flowchart LR
 
 ---
 
-## 14. Plan de Adopción 30-60-90 Días
+## 13. Plan de Adopción 30-60-90 Días
 
 ```mermaid
 %%{init: {'theme': 'base', 'themeVariables': {'fontSize': '14px', 'primaryColor': '#4a90d9', 'primaryTextColor': '#000000', 'primaryBorderColor': '#3a7abd', 'secondaryColor': '#27ae60', 'tertiaryColor': '#7b68ee', 'textColor': '#000000', 'mainBkg': '#ffffff', 'sectionBkgColor': '#e8f4fd', 'sectionBkgColor2': '#f5f0ff', 'altSectionBkgColor': '#e8f5e9', 'taskBkgColor': '#4a90d9', 'taskTextColor': '#ffffff', 'taskBorderColor': '#3a7abd', 'taskTextOutsideColor': '#000000', 'taskTextClickableColor': '#000000', 'activeTaskBkgColor': '#27ae60', 'activeTaskBorderColor': '#1e8449', 'doneTaskBkgColor': '#7b68ee', 'doneTaskBorderColor': '#6a5acd', 'gridColor': '#cccccc', 'todayLineColor': '#e74c3c', 'titleColor': '#000000', 'labelColor': '#000000', 'loopTextColor': '#000000', 'noteBkgColor': '#ffffff', 'noteTextColor': '#000000'}}}%%
@@ -521,7 +473,7 @@ gantt
 
 ---
 
-## 15. Ejemplo Completo: Sistema de Booking
+## 14. Ejemplo Completo: Sistema de Booking
 
 ```mermaid
 flowchart TB
@@ -561,7 +513,7 @@ flowchart TB
 
 ---
 
-## 16. Anti-patrones vs. Patrones Correctos
+## 15. Anti-patrones vs. Patrones Correctos
 
 ```mermaid
 flowchart LR
@@ -605,7 +557,7 @@ flowchart LR
 
 ---
 
-## 17. Alineacion DDD en Especificaciones
+## 16. Alineacion DDD en Especificaciones
 
 ```mermaid
 flowchart TB
