@@ -123,54 +123,6 @@ flowchart TB
 
 ---
 
-## 4. Matriz RACI por Fase
-
-```mermaid
-block-beta
-    columns 4
-    
-    block:header:4
-        H1["Actividad"] H2["Arquitecto"] H3["Dev Senior"] H4["QA/Revisor"]
-    end
-
-    block:row1:4
-        R1["Definir ADRs"] R1a["R/A"] R1b["C"] R1c["I"]
-    end
-
-    block:row2:4
-        R2["Crear Specs"] R2a["A"] R2b["R"] R2c["C"]
-    end
-
-    block:row3:4
-        R3["Aprobar Specs"] R3a["R/A"] R3b["I"] R3c["C"]
-    end
-
-    block:row4:4
-        R4["Diseñar Prompt"] R4a["C"] R4b["R/A"] R4c["I"]
-    end
-
-    block:row5:4
-        R5["Generar Código"] R5a["I"] R5b["R/A"] R5c["I"]
-    end
-
-    block:row6:4
-        R6["Validar Gates"] R6a["I"] R6b["C"] R6c["R/A"]
-    end
-
-    block:row7:4
-        R7["Revisión y Merge"] R7a["C"] R7b["I"] R7c["R/A"]
-    end
-
-    style H1 fill:#34495e,color:#fff
-    style H2 fill:#4a90d9,color:#fff
-    style H3 fill:#e67e22,color:#fff
-    style H4 fill:#27ae60,color:#fff
-```
-
-> **R** = Responsable (ejecuta) | **A** = Accountable (responde) | **C** = Consultado | **I** = Informado
-
----
-
 ## 5. Niveles de Especificación y su Relación
 
 ```mermaid
