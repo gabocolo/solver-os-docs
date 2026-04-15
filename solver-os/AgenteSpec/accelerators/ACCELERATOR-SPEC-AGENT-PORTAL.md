@@ -94,6 +94,10 @@ Estos componentes **cambian** segun el cliente/dominio:
 | Proveedor OAuth | GitHub, Azure AD, Okta, Auth0 | Cada cliente tiene su identity provider |
 | Metricas custom | KPIs especificos del cliente | Compliance rate, security score |
 | Skills custom | Skills especificos del dominio del cliente | Generacion de reportes regulatorios, generacion de IaC |
+| Contratos OpenAPI | Punto de convergencia entre back y front | Contrato unico generado por SK-003 que alimenta prompts BE y FE |
+| Contexto por repositorio | CLAUDE.md separado por stack (backend/frontend) | CLAUDE-BACKEND.md para .NET, CLAUDE-FRONTEND.md para Angular |
+| Template de intake | Captura estructurada de contexto inicial | CONTEXT-INTAKE-TEMPLATE.md con dominio, stack, restricciones |
+| Exploracion de soluciones | A/B testing antes de comprometerse con implementacion | Generar 2-3 alternativas, validar con usuarios, luego implementar la ganadora |
 
 ---
 
@@ -166,6 +170,25 @@ Estos componentes **cambian** segun el cliente/dominio:
 | SK-005 | Pipeline de validacion PR | CI/CD con SAST + SCA + DLP (Gate 2) |
 | SK-006 | Data Masking | Genera filtros de masking para campos PII |
 | SK-007 | DLP Guard LLM | Middleware DLP bidireccional para integracion LLM |
+
+### Componentes adicionales (v1.1)
+
+| Componente | Tipo | Proposito |
+|-----------|------|-----------|
+| Prompts Frontend (PROMPT-00-FE a PROMPT-06-FE) | Build | Generacion de modulos Angular 21 pareados con prompts backend |
+| CLAUDE-BACKEND.md | Contexto | Contexto IA aislado para repo backend (.NET 10, Hexagonal) |
+| CLAUDE-FRONTEND.md | Contexto | Contexto IA aislado para repo frontend (Angular 21, Material) |
+| OPENAPI-CONTRACT-TEMPLATE.yaml | Template | Template base OpenAPI 3.1 — punto de convergencia back/front |
+| CONTEXT-INTAKE-TEMPLATE.md | Template | Captura estructurada de contexto inicial para reducir inferencia |
+
+### Alineacion con Domain-Driven Design
+
+El acelerador aplica DDD de forma pragmatica:
+- **Bounded Context** por dominio de negocio (definido en Spec L1)
+- **Agregados** con raiz, entidades internas y value objects
+- **Eventos de dominio** definidos en L1 (negocio), contrato tecnico en L2
+- **Lenguaje ubicuo** con columna "Nombre en codigo" en el Glosario
+- **Puertos como Anti-Corruption Layer** (ADR-001)
 
 ---
 

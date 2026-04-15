@@ -24,6 +24,20 @@ Portal web para administrar el agente de generacion de especificaciones del fram
 
 **Nombre:** Spec Agent Portal
 
+### Limite del contexto (Bounded Context)
+
+**Responsabilidad:** Gestion del ciclo de vida de especificaciones tecnicas, gobernanza (ADRs, quality gates), generacion asistida por IA, revision y aprobacion, generacion de prompts estructurados, metricas y trazabilidad, sincronizacion con Azure DevOps.
+
+**Fuera de alcance:** No implementa el codigo generado desde las specs (eso lo hacen los desarrolladores con los prompts). No gestiona el despliegue de aplicaciones. No reemplaza Azure DevOps (solo sincroniza work items).
+
+| Contexto externo | Relacion | Descripcion |
+|-----------------|----------|-------------|
+| Azure DevOps | Downstream | Publicamos work items cuando una spec es aprobada |
+| LLM Provider (Claude API) | Upstream | Consumimos API de Claude para generar specs y ADRs |
+| OAuth Provider (GitHub/Azure AD) | Upstream | Consumimos autenticacion y autorizacion |
+
+---
+
 ## Objetivo de negocio
 
 Convertir el framework AI-Driven Engineering de un conjunto de documentos y convenciones manuales en una **herramienta operativa** que enforce automaticamente las reglas de gobernanza, acelere la creacion de especificaciones con IA, y proporcione trazabilidad y metricas en tiempo real.
@@ -60,21 +74,37 @@ Convertir el framework AI-Driven Engineering de un conjunto de documentos y conv
 
 ---
 
-## Entidades
+## Modelo de dominio
 
-| Entidad | Descripcion | Atributos clave |
-|---------|------------|----------------|
-| **Project** | Proyecto o dominio que agrupa specs, ADRs y configuracion de gobernanza | projectId, name, description, gitRepoUrl, devOpsProjectUrl, devOpsOrganization, defaultBranch, createdAt, ownerId |
-| **Specification** | Especificacion versionada en cualquiera de los 3 niveles (L1/L2/L3) | specId, projectId, level (L1/L2/L3), parentSpecId, version, status, title, content (structured), dataClassification, createdBy, createdAt, approvedBy, approvedAt |
-| **ADR** | Architecture Decision Record asociado a un proyecto | adrId, projectId, number, title, status (PROPOSED/ACCEPTED/DEPRECATED/SUPERSEDED), content, createdBy, createdAt |
-| **QualityGateCheck** | Ejecucion de un quality gate sobre una spec o PR | checkId, specId, gateNumber (1/2/3), status (PASSED/FAILED/PENDING), findings[], executedAt, executedBy |
-| **ReviewCycle** | Ciclo de revision de una spec con comentarios y decision | reviewId, specId, reviewerId, status (PENDING/APPROVED/CHANGES_REQUESTED), comments[], startedAt, completedAt |
-| **Prompt** | Prompt estructurado generado desde una spec aprobada | promptId, specId, specVersion, skillId, role, task, context, constraints, generatedAt, generatedBy |
-| **Skill** | Skill registrado en el catalogo con metricas | skillId, projectId, name, type (BUILD/WORKFLOW), version, owner, phase, status (ACTIVE/DEPRECATED), metrics |
-| **Metric** | Metrica calculada del framework | metricId, projectId, type, value, period, calculatedAt |
-| **User** | Usuario autenticado del portal | userId, email, name, role (ARCHITECT/LEAD/SENIOR_DEV/QA/PO), oauthProvider, lastLoginAt |
-| **AuditLog** | Registro de auditoria de acciones criticas | logId, userId, action, entityType, entityId, timestamp, details |
-| **WorkItemSync** | Registro de sincronizacion de specs aprobadas con Azure DevOps como work items | syncId, specId, projectId, devOpsWorkItemId, devOpsUrl, syncStatus (PENDING/SYNCED/FAILED), syncedAt, error |
+### Agregados
+
+| Agregado (raiz) | Entidades internas | Value Objects | Invariantes |
+|-----------------|-------------------|---------------|-------------|
+| Specification | SpecSection | SpecVersion, SpecStatus, SpecLevel | Una spec solo puede pasar a IN_REVIEW si tiene estructura completa. Solo specs APPROVED pueden generar prompts. |
+| ReviewCycle | ReviewComment | ReviewDecision, ReviewStatus | Solo el reviewer asignado puede aprobar/rechazar. Una spec rechazada debe tener al menos un comentario. |
+| Project | ADR, QualityGateCheck | ProjectConfig | El nombre del proyecto es unico. Los ADRs tienen numero unico dentro del proyecto. |
+| Skill | — | SkillMetrics, SkillStatus | Un skill deprecado no puede ser invocado en nuevos prompts. |
+| Prompt | — | PromptContext | Un prompt solo puede generarse desde una spec APPROVED. |
+
+### Detalle de entidades
+
+| Entidad | Tipo | Agregado | Descripcion | Atributos clave |
+|---------|------|----------|------------|----------------|
+| **Specification** | Raiz de agregado | Specification | Especificacion versionada en cualquiera de los 3 niveles (L1/L2/L3) | specId, projectId, level, parentSpecId, version, status, title, content, dataClassification, createdBy, approvedBy |
+| **SpecSection** | Entidad interna | Specification | Seccion individual de una spec (regenerable por IA) | sectionId, specId, name, content, regeneratedAt |
+| **ReviewCycle** | Raiz de agregado | ReviewCycle | Ciclo de revision de una spec con comentarios y decision | reviewId, specId, reviewerId, status, comments[], startedAt, completedAt |
+| **ReviewComment** | Entidad interna | ReviewCycle | Comentario de revision sobre una seccion especifica | commentId, reviewId, section, content, authorId, createdAt |
+| **Project** | Raiz de agregado | Project | Proyecto que agrupa specs, ADRs y configuracion de gobernanza | projectId, name, description, gitRepoUrl, devOpsProjectUrl, ownerId |
+| **ADR** | Entidad interna | Project | Architecture Decision Record asociado a un proyecto | adrId, projectId, number, title, status, content, createdBy |
+| **QualityGateCheck** | Entidad interna | Project | Ejecucion de un quality gate sobre una spec o PR | checkId, specId, gateNumber, status, findings[], executedAt |
+| **Skill** | Raiz de agregado | Skill | Skill registrado en el catalogo con metricas | skillId, name, type, version, owner, phase, status, metrics |
+| **Prompt** | Raiz de agregado | Prompt | Prompt estructurado generado desde spec aprobada | promptId, specId, specVersion, skillId, role, task, context |
+| **User** | Raiz de agregado | — | Usuario autenticado del portal | userId, email, name, role, oauthProvider |
+| **AuditLog** | Value Object | — | Registro de auditoria (inmutable) | logId, userId, action, entityType, entityId, timestamp |
+| **WorkItemSync** | Value Object | — | Registro de sincronizacion con Azure DevOps (inmutable) | syncId, specId, devOpsWorkItemId, syncStatus, syncedAt |
+| **SpecVersion** | Value Object | Specification | Version semantica (semver) | major, minor, patch |
+| **SpecStatus** | Value Object | Specification | Estado de la spec | value (DRAFT, IN_REVIEW, APPROVED, IMPLEMENTED, DEPRECATED) |
+| **ReviewDecision** | Value Object | ReviewCycle | Decision del revisor | value (APPROVED, CHANGES_REQUESTED), signature, timestamp |
 
 ---
 
@@ -114,6 +144,19 @@ Convertir el framework AI-Driven Engineering de un conjunto de documentos y conv
 | BR-009 | PR menor a 400 lineas | El portal advierte cuando una spec L3 implica un cambio que probablemente supere 400 lineas de codigo, sugiriendo dividir en multiples L3 | Principio del framework: PRs quirurgicos |
 | BR-010 | Skills versionados y medidos | Todo skill en el catalogo debe tener version, owner y metricas. Si un skill tiene > 20% retrabajo sostenido por 2 sprints, el portal alerta para rediseno | Mejora continua basada en datos |
 | BR-011 | Sync a Azure DevOps al aprobar | Al aprobar una spec, el portal crea automaticamente un work item en Azure DevOps (Feature para L1, User Story para L2, Task para L3) con la informacion de la spec, trazabilidad y criterios de aceptacion. Si falla la sincronizacion, la spec queda aprobada pero se registra el error para reintento | Trazabilidad bidireccional spec → backlog. El equipo trabaja desde Azure DevOps Boards con referencia directa a la spec |
+
+---
+
+## Eventos de dominio
+
+| Evento | Disparado cuando | Datos relevantes | Consumidores potenciales |
+|--------|-----------------|-----------------|------------------------|
+| SpecCreated | Se crea una spec como DRAFT | specId, projectId, level, createdBy | AuditLog |
+| SpecSubmittedForReview | Una spec pasa de DRAFT a IN_REVIEW | specId, reviewerId | Notifications, AuditLog |
+| SpecApproved | Un reviewer aprueba la spec | specId, version, approvedBy, approvedAt | DevOps Sync, Notifications, Metrics |
+| SpecRejected | Un reviewer rechaza con CHANGES_REQUESTED | specId, reviewerId, comments | Notifications, AuditLog |
+| PromptGenerated | Se genera un prompt desde spec aprobada | promptId, specId, skillId, generatedBy | Metrics, AuditLog |
+| SpecStatusChanged | Cualquier cambio de estado de una spec | specId, oldStatus, newStatus | Metrics (cache invalidation) |
 
 ---
 
@@ -326,24 +369,29 @@ para que el equipo pueda planificar y trackear el trabajo desde Azure DevOps Boa
 
 ---
 
-## Glosario del dominio
+## Lenguaje ubicuo del dominio (Glosario)
 
-| Termino | Definicion |
-|---------|-----------|
-| Spec (Specification) | Artefacto versionado que define QUE construir (L1), COMO tecnicamente (L2) o QUE cambiar (L3) |
-| L1 / L2 / L3 | Los tres niveles de especificacion del framework: Dominio, Sistema, Cambio |
-| ADR | Architecture Decision Record — decision tecnica documentada, enumerada y trazable |
-| Quality Gate | Punto de control obligatorio que valida condiciones antes de avanzar al siguiente paso |
-| Gate 1 | Spec versionada + aprobada + clasificacion de datos completa (antes de generar codigo) |
-| Gate 2 | Tests + SAST + SCA + DLP Scan pasan (antes de revision humana de codigo) |
-| Gate 3 | Revision de senior obligatoria (antes del merge) |
-| Skill | Tarea repetible estandarizada con inputs, outputs y metricas (Build o Workflow) |
-| Prompt estructurado | Prompt que invoca una spec versionada con rol, tarea y restricciones — no contiene reglas de negocio |
-| DLP | Data Loss Prevention — prevencion de fuga de datos sensibles |
-| Semver | Versionado semantico: MAJOR.MINOR.PATCH |
-| Privacy by Design | Principio de proteger datos desde la especificacion, no como parche posterior |
-| Trazabilidad | Cadena completa y auditable: spec → prompt → commit → release |
-| Agente IA | Componente del portal que usa LLMs para asistir la generacion y validacion de specs |
+_Estos terminos son obligatorios en codigo, specs, tests y conversaciones. La columna "Nombre en codigo" define como debe aparecer en la implementacion._
+
+| Termino | Definicion | Nombre en codigo |
+|---------|-----------|-----------------|
+| Spec (Specification) | Artefacto versionado que define QUE construir (L1), COMO tecnicamente (L2) o QUE cambiar (L3) | `Specification` |
+| L1 / L2 / L3 | Los tres niveles de especificacion del framework: Dominio, Sistema, Cambio | `SpecLevel` (enum) |
+| ADR | Architecture Decision Record — decision tecnica documentada, enumerada y trazable | `ArchitectureDecisionRecord` |
+| Quality Gate | Punto de control obligatorio que valida condiciones antes de avanzar al siguiente paso | `QualityGateCheck` |
+| Gate 1 / Gate 2 / Gate 3 | Los tres gates obligatorios del framework | `GateNumber` (enum) |
+| Skill | Tarea repetible estandarizada con inputs, outputs y metricas (Build o Workflow) | `Skill` |
+| Prompt estructurado | Prompt que invoca una spec versionada con rol, tarea y restricciones | `StructuredPrompt` |
+| Ciclo de revision | Proceso de revision humana de una spec con comentarios y decision | `ReviewCycle` |
+| Comentario de revision | Comentario del revisor sobre una seccion especifica | `ReviewComment` |
+| Decision de revision | Decision final del revisor (aprobado o cambios requeridos) | `ReviewDecision` (enum) |
+| DLP | Data Loss Prevention — prevencion de fuga de datos sensibles | `DLPFilter` |
+| Semver | Versionado semantico: MAJOR.MINOR.PATCH | `SpecVersion` (value object) |
+| Privacy by Design | Principio de proteger datos desde la especificacion, no como parche posterior | — (principio) |
+| Trazabilidad | Cadena completa y auditable: spec → prompt → commit → release | `AuditLog` |
+| Agente IA | Componente del portal que usa LLMs para asistir la generacion y validacion de specs | `AgentOrchestrationService` |
+| Contrato OpenAPI | Archivo YAML que define el contrato API entre backend y frontend | `OpenApiContract` |
+| Sincronizacion DevOps | Proceso de crear work items en Azure DevOps desde specs aprobadas | `WorkItemSync` |
 
 ---
 

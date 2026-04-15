@@ -196,3 +196,46 @@ Segun ADR-001, el sistema sigue arquitectura hexagonal estricta. El dominio no d
 | Monaco Editor en frontend | Mismo editor de VS Code, soporte markdown nativo, diff viewer |
 | Redis para cache de metricas | Sub-milisegundo, TTL nativo, invalidacion por eventos |
 | Seq para logs | Query potente sobre JSON, dashboards, alertas, bajo costo MVP |
+
+---
+
+## Contratos OpenAPI
+
+Los contratos OpenAPI son el **punto de convergencia** entre backend y frontend. Se generan con SK-003 desde la seccion "Contrato tecnico" de cada spec L2.
+
+| Contrato | Spec L2 | Endpoints principales |
+|----------|---------|----------------------|
+| spec-management-api.yaml | SPEC-L2-create-specs | POST /api/specs, GET /api/specs/{id}, PUT /api/specs/{id}/sections |
+| governance-api.yaml | SPEC-L2-manage-projects | POST /api/projects, POST /api/adrs, PUT /api/quality-gates |
+| review-api.yaml | SPEC-L2-review-specs | POST /api/reviews, PUT /api/reviews/{id}/decision |
+| prompt-builder-api.yaml | SPEC-L2-generate-prompts | POST /api/prompts/build, GET /api/prompts/{id} |
+| metrics-api.yaml | SPEC-L2-metrics-dashboard | GET /api/metrics, GET /api/metrics/traceability |
+| skills-api.yaml | SPEC-L2-manage-skills | POST /api/skills, PUT /api/skills/{id} |
+| devops-sync-api.yaml | SPEC-L2-sync-devops | POST /api/sync/spec/{id} |
+
+> Cada contrato se genera usando OPENAPI-CONTRACT-TEMPLATE.yaml y SK-003. El contrato debe existir en ambos repositorios (backend y frontend).
+
+---
+
+## Contexto por repositorio
+
+Cada repositorio tiene su propio archivo de contexto para la IA:
+
+| Archivo | Repositorio | Stack |
+|---------|------------|-------|
+| CLAUDE-BACKEND.md | Backend | .NET 10, C#, Hexagonal, PostgreSQL, Redis, Semantic Kernel |
+| CLAUDE-FRONTEND.md | Frontend | Angular 21, Angular Material, Tailwind CSS, Monaco Editor |
+
+> La documentacion vive en el repositorio de codigo, NO en la wiki. La wiki sirve para humanos, el repo para la IA (recomendacion de Osvaldo Arias).
+
+---
+
+## Alineacion DDD
+
+El dominio del Spec Agent Portal aplica Domain-Driven Design de forma pragmatica:
+
+- **Bounded Context**: Gestion de especificaciones y gobernanza
+- **Agregados**: Specification, ReviewCycle, Project, Skill, Prompt
+- **Eventos de dominio**: SpecApproved, SpecStatusChanged (consumidos por DevOps Sync y Metrics)
+- **Puertos (ACL)**: ILLMProvider, IDevOpsWorkItemAdapter, IDLPFilter (ADR-001)
+- **Lenguaje ubicuo**: definido en Glosario de SPEC-L1 con columna "Nombre en codigo"

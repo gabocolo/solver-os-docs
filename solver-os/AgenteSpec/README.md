@@ -27,15 +27,24 @@ AgenteSpec/
 │   │   └── ADR-P005-dlp-filter-architecture.md ← Arquitectura DLP bidireccional
 │   └── quality-gates/
 │       └── QUALITY-GATES-PROJECT.md           ← Quality gates del proyecto (Gate 1-3)
+├── CLAUDE-BACKEND.md                              ← Contexto IA para repo backend (.NET 10)
+├── CLAUDE-FRONTEND.md                             ← Contexto IA para repo frontend (Angular 21)
 ├── prompts/
-│   ├── README.md                              ← Indice y orden de implementacion
-│   ├── PROMPT-01-manage-projects.md           ← Prompt: Governance Service
-│   ├── PROMPT-02-create-specs.md              ← Prompt: Spec Management + Agent
-│   ├── PROMPT-03-review-specs.md              ← Prompt: Review Service
-│   ├── PROMPT-04-generate-prompts.md          ← Prompt: Prompt Builder
-│   ├── PROMPT-05-metrics-dashboard.md         ← Prompt: Metrics Service
-│   ├── PROMPT-06-manage-skills.md             ← Prompt: Skill Catalog
-│   └── PROMPT-07-sync-devops.md               ← Prompt: DevOps Sync Service
+│   ├── README.md                              ← Indice y orden de implementacion BE+FE
+│   ├── PROMPT-00-FE-ARCHITECTURE.md           ← Prompt FE: Scaffold Angular 21
+│   ├── PROMPT-01-manage-projects.md           ← Prompt BE: Governance Service
+│   ├── PROMPT-01-FE-projects.md               ← Prompt FE: Projects module
+│   ├── PROMPT-02-create-specs.md              ← Prompt BE: Spec Management + Agent
+│   ├── PROMPT-02-FE-create-specs.md           ← Prompt FE: Spec Editor + AI wizard
+│   ├── PROMPT-03-review-specs.md              ← Prompt BE: Review Service
+│   ├── PROMPT-03-FE-review-specs.md           ← Prompt FE: Review Panel
+│   ├── PROMPT-04-generate-prompts.md          ← Prompt BE: Prompt Builder
+│   ├── PROMPT-04-FE-generate-prompts.md       ← Prompt FE: Prompt Builder UI
+│   ├── PROMPT-05-metrics-dashboard.md         ← Prompt BE: Metrics Service
+│   ├── PROMPT-05-FE-metrics-dashboard.md      ← Prompt FE: Metrics Dashboard
+│   ├── PROMPT-06-manage-skills.md             ← Prompt BE: Skill Catalog
+│   ├── PROMPT-06-FE-manage-skills.md          ← Prompt FE: Skill Catalog UI
+│   └── PROMPT-07-sync-devops.md               ← Prompt BE: DevOps Sync Service
 └── specs/
     ├── SPEC-L1-spec-agent-portal.md           ← Dominio: entidades, reglas, 7 CUs
     ├── SPEC-L2-manage-projects.md             ← Sistema: proyectos y gobernanza
@@ -53,25 +62,31 @@ AgenteSpec/
 L1: Spec Agent Portal (dominio)
 ├── L2: ManageProjects v1.0.0 (proyectos + gobernanza)
 │     ├── 6 dependencias, 6 escenarios GWT
-│     └── PROMPT-01 → SK-001
+│     ├── PROMPT-01 (BE) → SK-001
+│     └── PROMPT-01-FE (FE) → Angular Projects module
 ├── L2: CreateSpecs v1.0.0 (creacion asistida por IA)
 │     ├── 8 dependencias, 8 escenarios GWT
-│     └── PROMPT-02 → SK-001
+│     ├── PROMPT-02 (BE) → SK-001
+│     └── PROMPT-02-FE (FE) → Angular Spec Editor + AI wizard
 ├── L2: ReviewSpecs v1.0.0 (revision + validacion auto)
 │     ├── 7 dependencias, 8 escenarios GWT
-│     └── PROMPT-03 → SK-001
+│     ├── PROMPT-03 (BE) → SK-001
+│     └── PROMPT-03-FE (FE) → Angular Review Panel
 ├── L2: GeneratePrompts v1.0.0 (prompt builder)
 │     ├── 6 dependencias, 6 escenarios GWT
-│     └── PROMPT-04 → SK-001
+│     ├── PROMPT-04 (BE) → SK-001
+│     └── PROMPT-04-FE (FE) → Angular Prompt Builder UI
 ├── L2: MetricsDashboard v1.0.0 (metricas + trazabilidad)
 │     ├── 6 dependencias, 6 escenarios GWT
-│     └── PROMPT-05 → SK-001
+│     ├── PROMPT-05 (BE) → SK-001
+│     └── PROMPT-05-FE (FE) → Angular Metrics Dashboard
 ├── L2: ManageSkills v1.0.0 (catalogo de skills)
 │     ├── 5 dependencias, 6 escenarios GWT
-│     └── PROMPT-06 → SK-001
+│     ├── PROMPT-06 (BE) → SK-001
+│     └── PROMPT-06-FE (FE) → Angular Skill Catalog UI
 └── L2: SyncDevOps v1.0.0 (sync Azure DevOps)
       ├── 6 dependencias, 8 escenarios GWT
-      └── PROMPT-07 → SK-001
+      └── PROMPT-07 (BE) → SK-001 (sin UI)
 ```
 
 ## Gobernanza del proyecto
@@ -105,16 +120,47 @@ L1: Spec Agent Portal (dominio)
 | LLM | Claude API (Opus / Sonnet / Haiku) |
 | Observabilidad | OpenTelemetry + Seq |
 
+## Contexto por repositorio
+
+Cada repositorio tiene su propio archivo de contexto para la IA (recomendacion de Osvaldo Arias):
+
+| Archivo | Repositorio | Stack |
+|---------|------------|-------|
+| [CLAUDE-BACKEND.md](CLAUDE-BACKEND.md) | Backend | .NET 10, C#, Hexagonal, PostgreSQL, Redis |
+| [CLAUDE-FRONTEND.md](CLAUDE-FRONTEND.md) | Frontend | Angular 21, Material, Tailwind, Monaco Editor |
+
+> La documentacion y el contexto viven en el repositorio de codigo, NO en la wiki. La wiki sirve para humanos, el repo para la IA.
+
+## Contratos OpenAPI
+
+Los contratos OpenAPI son el **punto de convergencia** entre backend y frontend. Se generan con SK-003 desde la spec L2 y deben existir en ambos repositorios.
+
 ## Orden recomendado de implementacion
 
+Backend y frontend se ejecutan **en paralelo** por caso de uso:
+
 ```
-1. PROMPT-01 → Governance Service (base del sistema)
-2. PROMPT-02 → Spec Management + Agent (funcionalidad core)
-3. PROMPT-03 → Review Service (flujo de aprobacion)
-4. PROMPT-04 → Prompt Builder
-5. PROMPT-06 → Skill Catalog
-6. PROMPT-05 → Metrics Dashboard
-7. PROMPT-07 → DevOps Sync (integracion externa)
+Paso 0: PROMPT-00-FE (scaffold Angular 21 — una sola vez)
+
+Paso 1: PROMPT-01 (BE) + PROMPT-01-FE (FE) — en paralelo
+Paso 2: PROMPT-02 (BE) + PROMPT-02-FE (FE) — en paralelo
+Paso 3: PROMPT-03 (BE) + PROMPT-03-FE (FE) — en paralelo
+Paso 4: PROMPT-04 (BE) + PROMPT-04-FE (FE) — en paralelo
+Paso 5: PROMPT-06 (BE) + PROMPT-06-FE (FE) — en paralelo
+Paso 6: PROMPT-05 (BE) + PROMPT-05-FE (FE) — en paralelo
+Paso 7: PROMPT-07 (BE solo — sin UI)
 ```
 
 Cada prompt genera un PR < 400 lineas. Se recomienda subdividir los prompts mas grandes (02, 03, 07) en multiples PRs segun las indicaciones de cada prompt.
+
+## Conceptos DDD aplicados
+
+El dominio del Spec Agent Portal aplica Domain-Driven Design de forma pragmatica:
+
+| Concepto DDD | Donde se define | Ejemplo |
+|-------------|----------------|---------|
+| Bounded Context | Spec L1 — Limite del contexto | Spec Agent Portal: gestion de specs y gobernanza |
+| Agregados | Spec L1 — Modelo de dominio | Specification (raiz), ReviewCycle (raiz) |
+| Lenguaje ubicuo | Spec L1 — Glosario con "Nombre en codigo" | Spec, Skill, QualityGate, ADR |
+| Eventos de dominio | Spec L1 → Spec L2 (contrato tecnico) | SpecApproved, SpecStatusChanged |
+| Puertos (ACL) | Spec L2 — Dependencias permitidas | ILLMProvider, IDevOpsWorkItemAdapter |
