@@ -207,6 +207,27 @@ El contexto mínimo permite:
 #### Objetivo de esta fase
 Convertir la generación en un **proceso repetible**: que cualquier desarrollador del equipo pueda replicarlo sin improvisación.
 
+#### Exploración de soluciones (A/B testing con IA)
+
+Antes de comprometerse con una implementación, el equipo puede generar **múltiples alternativas** de solución y validar cuál funciona mejor. Esto era costoso antes de la IA; ahora es viable.
+
+**Cuándo aplicar:**
+- Cuando hay incertidumbre sobre la mejor aproximación técnica
+- Cuando el cliente necesita ver opciones antes de decidir
+- En las primeras iteraciones de un proyecto nuevo
+
+**Cómo funciona:**
+1. Generar 2-3 alternativas de implementación desde la misma spec
+2. Desplegar prototipos rápidos (pueden ser básicos)
+3. Validar con usuarios reales cuál resuelve mejor el problema
+4. Comprometerse con la alternativa ganadora y continuar iterando
+
+**Reglas:**
+- No reemplaza la especificación — cada alternativa parte del mismo spec
+- Cada alternativa debe ser funcional mínima, no un mockup estático
+- La validación debe ser medible (métricas de uso, feedback estructurado)
+- Máximo 1 sprint de exploración antes de comprometerse
+
 ---
 
 ### Fase 4: Validación automatizada

@@ -51,7 +51,8 @@ _Estado actual del sistema, decisiones tecnicas previas, dependencias relevantes
 | {{campo2}} | {{tipo}} | Si/No | {{descripcion}} |
 | {{campo3}} | {{tipo}} | Si/No | {{descripcion}} |
 
-> Referencia OpenAPI (si existe): `{{path al archivo openapi.yaml}}`
+> Referencia OpenAPI: `{{path al archivo openapi.yaml}}` (generar con SK-003 usando OPENAPI-CONTRACT-TEMPLATE.yaml)
+> El contrato OpenAPI es el punto de convergencia entre backend y frontend. Debe existir en ambos repositorios.
 
 ### Output
 

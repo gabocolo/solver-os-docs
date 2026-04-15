@@ -1,0 +1,295 @@
+# =============================================================================
+# Plantilla de Contrato OpenAPI 3.1.0
+# Framework AI-Driven Engineering - Tech&Solve (Solver OS)
+# =============================================================================
+#
+# USO: Esta plantilla se utiliza al crear una especificacion de nivel 2 (L2)
+# que requiere un contrato API formal. Reemplazar los valores entre {{...}}
+# con los datos reales de la especificacion.
+#
+# REGLAS:
+# - El contrato debe estar versionado y aprobado ANTES de generar codigo
+# - Las dependencias permitidas se definen en la spec L2, no aqui
+# - Los campos sensibles (PII) deben incluir la extension x-data-classification
+# - Usar datos sinteticos en todos los ejemplos, nunca datos reales
+#
+# REFERENCIA: Spec L2 asociada → {{spec-name}} v{{X.Y.Z}}
+# =============================================================================
+
+openapi: 3.1.0
+
+info:
+  # Titulo del contrato — debe coincidir con el nombre de la spec L2
+  title: "{{Nombre del sistema}} API"
+  # Version del contrato — debe coincidir con la version de la spec L2 (semver)
+  version: "{{X.Y.Z}}"
+  description: |
+    Contrato API generado a partir de la especificacion L2: {{spec-name}} v{{X.Y.Z}}.
+
+    ## Especificacion de referencia
+    - **Spec L1 (dominio)**: {{nombre-spec-L1}} v{{X.Y.Z}}
+    - **Spec L2 (sistema)**: {{nombre-spec-L2}} v{{X.Y.Z}}
+
+    ## Reglas de dominio aplicables
+    - {{Regla de dominio 1 — ejemplo: No permitir overbooking}}
+    - {{Regla de dominio 2 — ejemplo: Fechas de reserva deben ser validas}}
+
+    ## Clasificacion de datos (ADR-006)
+    Los campos marcados con `x-data-classification: sensible` son PII
+    y requieren masking en logs, anonimizacion en ambientes no productivos
+    y cifrado en reposo.
+  contact:
+    name: "{{Nombre del equipo responsable}}"
+    email: "{{email-del-equipo}}"
+
+# =============================================================================
+# Servidores — definir URLs por ambiente
+# =============================================================================
+servers:
+  - url: "https://{{dominio-dev}}/api/v1"
+    description: Ambiente de desarrollo
+  - url: "https://{{dominio-staging}}/api/v1"
+    description: Ambiente de staging
+  - url: "https://{{dominio-prod}}/api/v1"
+    description: Ambiente de produccion
+
+# =============================================================================
+# Paths — definir cada endpoint segun la spec L2
+# =============================================================================
+#
+# INSTRUCCIONES:
+# - Un path por caso de uso definido en la spec L2
+# - operationId debe coincidir con el nombre del caso de uso en la spec
+# - Solo incluir dependencias y errores autorizados por la spec L2
+# - Agregar x-idempotency si la operacion requiere idempotencia (segun spec)
+#
+paths:
+  /api/v1/{{recurso}}:
+    post:
+      # operationId — debe coincidir con el caso de uso de la spec L2
+      operationId: "{{createRecurso}}"
+      summary: "{{Descripcion corta del caso de uso}}"
+      description: |
+        {{Descripcion detallada del caso de uso segun la spec L2.}}
+
+        **Dependencias permitidas** (segun spec L2):
+        - {{Dependencia 1 — ejemplo: AvailabilityService}}
+        - {{Dependencia 2 — ejemplo: CouponProvider}}
+
+        **Requisitos**: {{ejemplo: idempotencia obligatoria, transaccion atomica}}
+      tags:
+        - "{{NombreDelModulo}}"
+
+      # Seguridad — definir segun requisitos de autenticacion de la spec L2
+      security:
+        - bearerAuth: []
+
+      # Headers opcionales — incluir si la spec requiere idempotencia
+      parameters:
+        - name: X-Idempotency-Key
+          in: header
+          required: true # Cambiar a false si la spec no requiere idempotencia
+          description: Clave de idempotencia para garantizar operaciones unicas
+          schema:
+            type: string
+            format: uuid
+            example: "550e8400-e29b-41d4-a716-446655440000"
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/{{RecursoRequest}}"
+            # Ejemplo con datos SINTETICOS — nunca usar datos reales (PII)
+            example:
+              userId: "usr-synthetic-001"
+              roomId: "room-synthetic-101"
+              dates:
+                checkIn: "2026-06-01"
+                checkOut: "2026-06-05"
+
+      responses:
+        # ----- Respuesta exitosa -----
+        "200":
+          description: "{{Descripcion de la respuesta exitosa segun spec L2}}"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/{{RecursoResponse}}"
+              example:
+                id: "booking-synthetic-001"
+                status: "CONFIRMED"
+                createdAt: "2026-06-01T10:00:00Z"
+
+        # ----- Errores definidos en la spec L2 -----
+        # Incluir SOLO los errores listados en la seccion "Tipos de error" de la spec
+        "400":
+          description: "Request invalido — {{ejemplo: INVALID_DATES, campos requeridos faltantes}}"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              example:
+                code: "INVALID_DATES"
+                message: "Las fechas proporcionadas no son validas"
+                details:
+                  - field: "dates.checkIn"
+                    reason: "La fecha de check-in debe ser futura"
+
+        "404":
+          description: "Recurso no encontrado — {{ejemplo: ROOM_NOT_FOUND}}"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              example:
+                code: "ROOM_NOT_FOUND"
+                message: "El recurso solicitado no existe"
+                details: []
+
+        "409":
+          description: "Conflicto — {{ejemplo: ROOM_NOT_AVAILABLE, overbooking}}"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              example:
+                code: "ROOM_NOT_AVAILABLE"
+                message: "El recurso no esta disponible para las fechas solicitadas"
+                details: []
+
+        "500":
+          description: Error interno del servidor
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              example:
+                code: "INTERNAL_ERROR"
+                message: "Error interno del servidor"
+                # IMPORTANTE: No exponer IDs internos ni datos sensibles en errores
+                details: []
+
+# =============================================================================
+# Componentes — schemas, seguridad
+# =============================================================================
+components:
+  schemas:
+    # -------------------------------------------------------------------
+    # Schema de Request — mapear desde la tabla Input de la spec L2
+    # -------------------------------------------------------------------
+    # INSTRUCCIONES:
+    # - Cada campo de la tabla Input de la spec L2 se convierte en una propiedad
+    # - Marcar campos opcionales con el comentario correspondiente
+    # - Agregar x-data-classification a campos con clasificacion de datos (ADR-006)
+    # -------------------------------------------------------------------
+    "{{RecursoRequest}}":
+      type: object
+      required:
+        - "{{campo1}}"
+        - "{{campo2}}"
+      properties:
+        "{{campo1}}":
+          type: string
+          description: "{{Descripcion del campo segun spec L2}}"
+          # Clasificacion de datos segun spec L1 y ADR-006
+          # Valores posibles: publico, interno, confidencial, sensible
+          x-data-classification: "sensible"
+          example: "usr-synthetic-001"
+        "{{campo2}}":
+          type: string
+          description: "{{Descripcion del campo segun spec L2}}"
+          x-data-classification: "interno"
+          example: "room-synthetic-101"
+        "{{campo3_opcional}}":
+          type: string
+          description: "{{Descripcion del campo opcional}}"
+          x-data-classification: "interno"
+          example: "CUPON-SYNTHETIC-01"
+          # Campos opcionales NO se incluyen en required
+
+    # -------------------------------------------------------------------
+    # Schema de Response — mapear desde la tabla Output de la spec L2
+    # -------------------------------------------------------------------
+    # INSTRUCCIONES:
+    # - Cada campo de la tabla Output de la spec L2 se convierte en una propiedad
+    # - No exponer IDs internos en respuestas de error (segun spec L2)
+    # - Aplicar masking a campos PII si el consumidor no tiene autorizacion
+    # -------------------------------------------------------------------
+    "{{RecursoResponse}}":
+      type: object
+      properties:
+        id:
+          type: string
+          description: Identificador unico de la operacion
+          x-data-classification: "interno"
+          example: "booking-synthetic-001"
+        status:
+          type: string
+          description: Estado de la operacion
+          x-data-classification: "publico"
+          enum:
+            - "{{ESTADO_1}}"
+            - "{{ESTADO_2}}"
+          example: "CONFIRMED"
+        createdAt:
+          type: string
+          format: date-time
+          description: Fecha y hora de creacion
+          x-data-classification: "publico"
+          example: "2026-06-01T10:00:00Z"
+
+    # -------------------------------------------------------------------
+    # Schema de Error — estructura estandar para todas las respuestas de error
+    # -------------------------------------------------------------------
+    # IMPORTANTE:
+    # - No incluir datos sensibles (PII) en mensajes de error
+    # - No exponer IDs internos del sistema en errores
+    # - Los codigos de error deben coincidir con la seccion "Tipos de error" de la spec L2
+    # -------------------------------------------------------------------
+    ErrorResponse:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: string
+          description: |
+            Codigo de error definido en la spec L2.
+            Debe ser uno de los valores listados en la seccion "Tipos de error".
+          example: "ROOM_NOT_AVAILABLE"
+        message:
+          type: string
+          description: |
+            Mensaje descriptivo del error para el consumidor.
+            NO debe contener datos sensibles (PII) ni IDs internos del sistema.
+          example: "El recurso no esta disponible para las fechas solicitadas"
+        details:
+          type: array
+          description: Detalles adicionales del error (validaciones, campos especificos)
+          items:
+            type: object
+            properties:
+              field:
+                type: string
+                description: Campo relacionado con el error
+                example: "dates.checkIn"
+              reason:
+                type: string
+                description: Razon especifica del error en este campo
+                example: "La fecha de check-in debe ser futura"
+
+  # -----------------------------------------------------------------------
+  # Esquemas de seguridad — definir segun requisitos de autenticacion
+  # -----------------------------------------------------------------------
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: |
+        Autenticacion via JWT Bearer token.
+        El token debe ser emitido por {{AuthService / proveedor de identidad}}.
+        Incluir en el header: Authorization: Bearer <token>
