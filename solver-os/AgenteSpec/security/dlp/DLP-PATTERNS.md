@@ -29,4 +29,13 @@
 | Spec.content | Confidencial | Sanitizar antes de loggear (solo metadata) |
 | ADR.content | Confidencial | Sanitizar antes de enviar a LLM |
 
+## Implementacion
+
+Estos patrones se implementan mediante los siguientes prompts:
+
+| Prompt | Skill | Que genera |
+|--------|-------|-----------|
+| [PROMPT-08](../../prompts/PROMPT-08-data-masking.md) | SK-006 | Filtro Serilog PII, serializador seguro API, anonimizador para no-prod |
+| [PROMPT-09](../../prompts/PROMPT-09-dlp-guard-llm.md) | SK-007 | Middleware DLP bidireccional pre/post-prompt para Claude API |
+
 > Referencia: ADR-P005 (DLP Filter Architecture), ADR-006 (Data Classification)

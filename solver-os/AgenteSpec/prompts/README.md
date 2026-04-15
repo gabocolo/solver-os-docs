@@ -13,6 +13,8 @@ Prompts listos para usar que invocan las specs L2 aprobadas del Spec Agent Porta
 | [PROMPT-05](PROMPT-05-metrics-dashboard.md) | SPEC-L2-metrics-dashboard v1.0.0 | SK-001 | Implementar Metrics Service |
 | [PROMPT-06](PROMPT-06-manage-skills.md) | SPEC-L2-manage-skills v1.0.0 | SK-001 | Implementar Skill Catalog Service |
 | [PROMPT-07](PROMPT-07-sync-devops.md) | SPEC-L2-sync-devops v1.0.0 | SK-001 | Implementar DevOps Sync Service |
+| [PROMPT-08](PROMPT-08-data-masking.md) | SPEC-L1 (Clasificacion datos) | SK-006 | Implementar Data Masking (logs, API, ambientes) |
+| [PROMPT-09](PROMPT-09-dlp-guard-llm.md) | SPEC-L2-create-specs v1.0.0 | SK-007 | Implementar DLP Guard LLM (pre/post-prompt) |
 
 ## Indice — Frontend (Angular 21)
 
@@ -48,6 +50,8 @@ Paso 4: PROMPT-04 (backend) + PROMPT-04-FE (frontend) — en paralelo
 Paso 5: PROMPT-06 (backend) + PROMPT-06-FE (frontend) — en paralelo
 Paso 6: PROMPT-05 (backend) + PROMPT-05-FE (frontend) — en paralelo
 Paso 7: PROMPT-07 (backend solo — sin UI)
+Paso 8: PROMPT-08 (Data Masking — SK-006) — transversal, aplica a todo el backend
+Paso 9: PROMPT-09 (DLP Guard LLM — SK-007) — middleware DLP para integracion con Claude API
 ```
 
 ## Dependencias
