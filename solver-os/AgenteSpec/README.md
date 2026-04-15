@@ -2,58 +2,62 @@
 
 Portal web para administrar el agente de generacion de especificaciones del framework AI-Driven Engineering de Tech&Solve. Automatiza el ciclo completo: desde la entrada de negocio hasta la spec versionada y aprobada, con gobernanza, quality gates y metricas integradas.
 
-## Estructura
+## Estructura AI-Ready Repository
 
 ```
 AgenteSpec/
-├── accelerators/
-│   ├── ACCELERATOR-SPEC-AGENT-PORTAL.md       ← Diseno del acelerador transversal
-│   └── AGENTIZATION-OPPORTUNITIES.md          ← Matriz de oportunidades + ROI
-├── architecture/
-│   ├── README.md                              ← Indice de arquitectura y stack
+├── architecture/                              ← ADRs, C4, principios, arquitectura de solucion
 │   ├── 01-SOLUTION-ARCHITECTURE.md            ← Vision, hexagonal, componentes, seguridad
 │   ├── 02-SEQUENCE-FLOWS.md                   ← Diagramas de secuencia (7 flujos)
 │   ├── 03-DATA-MODEL.md                       ← ER, tablas, enums, indices, ADR-006
 │   ├── 04-DEPLOYMENT-AND-INFRA.md             ← Docker Compose, CI/CD, repo structure
-│   ├── 05-UI-WIREFRAMES.md                    ← Wireframes ASCII (6 pantallas)
-│   └── 06-ASSUMPTIONS.md                      ← Supuestos, riesgos, checklist
-├── governance/
-│   ├── README.md                              ← Indice de gobernanza del proyecto
-│   ├── adrs/
-│   │   ├── ADR-P001-llm-model-selection.md    ← Seleccion de modelos por tarea
-│   │   ├── ADR-P002-async-generation.md       ← Generacion asincrona via Service Bus
-│   │   ├── ADR-P003-spec-storage-jsonb.md     ← Almacenamiento JSONB en PostgreSQL
-│   │   ├── ADR-P004-devops-sync-strategy.md   ← Sincronizacion con Azure DevOps
-│   │   └── ADR-P005-dlp-filter-architecture.md ← Arquitectura DLP bidireccional
-│   └── quality-gates/
-│       └── QUALITY-GATES-PROJECT.md           ← Quality gates del proyecto (Gate 1-3)
-├── CLAUDE-BACKEND.md                              ← Contexto IA para repo backend (.NET 10)
-├── CLAUDE-FRONTEND.md                             ← Contexto IA para repo frontend (Angular 21)
-├── prompts/
-│   ├── README.md                              ← Indice y orden de implementacion BE+FE
-│   ├── PROMPT-00-FE-ARCHITECTURE.md           ← Prompt FE: Scaffold Angular 21
-│   ├── PROMPT-01-manage-projects.md           ← Prompt BE: Governance Service
-│   ├── PROMPT-01-FE-projects.md               ← Prompt FE: Projects module
-│   ├── PROMPT-02-create-specs.md              ← Prompt BE: Spec Management + Agent
-│   ├── PROMPT-02-FE-create-specs.md           ← Prompt FE: Spec Editor + AI wizard
-│   ├── PROMPT-03-review-specs.md              ← Prompt BE: Review Service
-│   ├── PROMPT-03-FE-review-specs.md           ← Prompt FE: Review Panel
-│   ├── PROMPT-04-generate-prompts.md          ← Prompt BE: Prompt Builder
-│   ├── PROMPT-04-FE-generate-prompts.md       ← Prompt FE: Prompt Builder UI
-│   ├── PROMPT-05-metrics-dashboard.md         ← Prompt BE: Metrics Service
-│   ├── PROMPT-05-FE-metrics-dashboard.md      ← Prompt FE: Metrics Dashboard
-│   ├── PROMPT-06-manage-skills.md             ← Prompt BE: Skill Catalog
-│   ├── PROMPT-06-FE-manage-skills.md          ← Prompt FE: Skill Catalog UI
-│   └── PROMPT-07-sync-devops.md               ← Prompt BE: DevOps Sync Service
-└── specs/
-    ├── SPEC-L1-spec-agent-portal.md           ← Dominio: entidades, reglas, 7 CUs
-    ├── SPEC-L2-manage-projects.md             ← Sistema: proyectos y gobernanza
-    ├── SPEC-L2-create-specs.md                ← Sistema: creacion asistida por IA
-    ├── SPEC-L2-review-specs.md                ← Sistema: revision y aprobacion
-    ├── SPEC-L2-generate-prompts.md            ← Sistema: prompt builder
-    ├── SPEC-L2-metrics-dashboard.md           ← Sistema: metricas y trazabilidad
-    ├── SPEC-L2-manage-skills.md               ← Sistema: catalogo de skills
-    └── SPEC-L2-sync-devops.md                 ← Sistema: sync con Azure DevOps
+│   ├── 05-UI-WIREFRAMES.md                    ← Wireframes (6 pantallas)
+│   ├── 06-ASSUMPTIONS.md                      ← Supuestos, riesgos, checklist
+│   ├── c4/                                    ← Diagramas C4 en Mermaid
+│   └── principles/                            ← Principios de arquitectura
+├── specifications/                            ← Specs AI-executable
+│   ├── domain/                                ← Specs L1 (dominio)
+│   │   └── SPEC-L1-spec-agent-portal.md       ← Dominio: agregados, reglas, eventos, 7 CUs
+│   ├── system/                                ← Specs L2 (sistema)
+│   │   ├── SPEC-L2-manage-projects.md         ← Proyectos y gobernanza
+│   │   ├── SPEC-L2-create-specs.md            ← Creacion asistida por IA
+│   │   ├── SPEC-L2-review-specs.md            ← Revision y aprobacion
+│   │   ├── SPEC-L2-generate-prompts.md        ← Prompt builder
+│   │   ├── SPEC-L2-metrics-dashboard.md       ← Metricas y trazabilidad
+│   │   ├── SPEC-L2-manage-skills.md           ← Catalogo de skills
+│   │   └── SPEC-L2-sync-devops.md             ← Sync con Azure DevOps
+│   ├── changes/                               ← Specs L3 (cambios incrementales)
+│   └── context/                               ← Contexto inicial capturado
+├── contracts/                                 ← Punto de convergencia back/front
+│   ├── openapi/                               ← Contratos OpenAPI 3.1 YAML (7 contratos)
+│   └── events/                                ← Schemas de eventos de dominio (JSON)
+│       ├── SpecApproved.json
+│       ├── SpecStatusChanged.json
+│       └── PromptGenerated.json
+├── security/                                  ← Seguridad y DLP
+│   ├── threat-models/THREAT-MODEL-SPEC-AGENT.md ← Analisis STRIDE
+│   ├── policies/QUALITY-GATES-PROJECT.md      ← Quality gates
+│   └── dlp/DLP-PATTERNS.md                    ← Patrones DLP pre/post-prompt
+├── tests/                                     ← Pruebas (TDD — tests antes de codigo)
+│   ├── unit/                                  ← Tests GWT (48 escenarios)
+│   ├── integration/                           ← Tests de integracion
+│   ├── contract/                              ← Tests de contrato OpenAPI
+│   ├── e2e/                                   ← Tests end-to-end
+│   └── fixtures/                              ← Datos sinteticos (NUNCA PII real)
+├── src/                                       ← Codigo de producto
+│   ├── backend/                               ← .NET 10 Hexagonal (Domain/Application/Infrastructure/Api)
+│   └── frontend/                              ← Angular 21 (core/shared/features/auth)
+├── observability/                             ← Logs, metricas, trazas, alertas
+│   ├── metrics/METRICS-DEFINITIONS.md         ← 20+ metricas custom definidas
+│   ├── logs/                                  ← Configuracion Serilog + PII masking
+│   ├── tracing/                               ← OpenTelemetry config
+│   └── alerts/                                ← Reglas de alertamiento
+├── governance/                                ← ADRs del proyecto (decisiones locales)
+│   └── adrs/ADR-P001..ADR-P005               ← 5 ADRs del proyecto
+├── prompts/                                   ← 15 prompts (7 BE + 7 FE + 1 scaffold)
+├── accelerators/                              ← Acelerador transversal + oportunidades
+├── CLAUDE-BACKEND.md                          ← Contexto IA backend (.NET 10)
+└── CLAUDE-FRONTEND.md                         ← Contexto IA frontend (Angular 21)
 ```
 
 ## Trazabilidad

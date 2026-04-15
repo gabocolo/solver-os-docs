@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "SpecApproved",
+  "description": "Evento publicado cuando una especificacion es aprobada (status -> APPROVED)",
+  "type": "object",
+  "properties": {
+    "eventType": { "const": "SpecApproved" },
+    "specId": { "type": "string", "format": "uuid" },
+    "projectId": { "type": "string", "format": "uuid" },
+    "level": { "enum": ["L1", "L2", "L3"] },
+    "version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$" },
+    "title": { "type": "string" },
+    "approvedBy": { "type": "string", "format": "uuid", "x-data-classification": "Interno" },
+    "approvedAt": { "type": "string", "format": "date-time" },
+    "correlationId": { "type": "string", "format": "uuid" }
+  },
+  "required": ["eventType", "specId", "projectId", "level", "version", "approvedBy", "approvedAt", "correlationId"]
+}

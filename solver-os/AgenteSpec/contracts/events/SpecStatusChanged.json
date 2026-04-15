@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "SpecStatusChanged",
+  "description": "Evento publicado cuando una especificacion cambia de estado",
+  "type": "object",
+  "properties": {
+    "eventType": { "const": "SpecStatusChanged" },
+    "specId": { "type": "string", "format": "uuid" },
+    "projectId": { "type": "string", "format": "uuid" },
+    "oldStatus": { "enum": ["DRAFT", "IN_REVIEW", "APPROVED", "IMPLEMENTED", "DEPRECATED"] },
+    "newStatus": { "enum": ["DRAFT", "IN_REVIEW", "APPROVED", "IMPLEMENTED", "DEPRECATED"] },
+    "changedBy": { "type": "string", "format": "uuid", "x-data-classification": "Interno" },
+    "changedAt": { "type": "string", "format": "date-time" },
+    "correlationId": { "type": "string", "format": "uuid" }
+  },
+  "required": ["eventType", "specId", "projectId", "oldStatus", "newStatus", "changedBy", "changedAt", "correlationId"]
+}

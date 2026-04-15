@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "PromptGenerated",
+  "description": "Evento publicado cuando se genera un prompt estructurado desde una spec aprobada",
+  "type": "object",
+  "properties": {
+    "eventType": { "const": "PromptGenerated" },
+    "promptId": { "type": "string", "format": "uuid" },
+    "specId": { "type": "string", "format": "uuid" },
+    "specVersion": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$" },
+    "skillId": { "type": "string" },
+    "generatedBy": { "type": "string", "format": "uuid", "x-data-classification": "Interno" },
+    "generatedAt": { "type": "string", "format": "date-time" },
+    "correlationId": { "type": "string", "format": "uuid" }
+  },
+  "required": ["eventType", "promptId", "specId", "specVersion", "skillId", "generatedBy", "generatedAt", "correlationId"]
+}
