@@ -16,10 +16,25 @@ Este framework es una propuesta organizacional para Tech&Solve. No depende de un
 ## 1. Contexto organizacional
 
 ### Repositorio AI-Ready
-- Existe un repositorio de referencia que contiene la estructura del framework
-- Incluye carpetas de arquitectura, especificaciones, contratos y artefactos de gobernanza
-- La adopción del framework implica adoptar este repositorio como base
+
+La documentacion vive en el repositorio de codigo, NO en la wiki. La estructura estandar de entregables es:
+
+```
+/repository
+  /architecture      → ADRs, C4 (Mermaid), principios
+  /specifications    → ai-executable-specs (L1/L2/L3), use-cases
+  /contracts         → openapi / eventos de dominio
+  /security          → threat-models, politicas, DLP
+  /tests             → unit (GWT) / integration / contract / e2e
+  /src               → codigo de producto (backend y/o frontend)
+  /observability     → logs / metrics / tracing / alerts
+```
+
+- Cada repositorio tiene su propio CLAUDE.md (CLAUDE-BACKEND.md, CLAUDE-FRONTEND.md)
+- Los contratos OpenAPI son donde convergen backend y frontend
+- Diagramas siempre en Mermaid (optimiza tokens)
 - **NO se debe pasar todo el repositorio como contexto a la IA** — solo el contexto mínimo necesario
+- Template completo en: `fase-1/repository-template/`
 
 ---
 
